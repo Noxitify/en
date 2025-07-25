@@ -8,7 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        html {
+            height: 100%;
+        }
         body {
+            height: 100%;
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #2d1a3e, #1a1a2e);
             background-size: 400% 400%;
@@ -16,12 +20,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             margin: 0;
             color: #e2e8f0;
-            overflow: hidden;
             position: relative;
-            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto; /* Allow vertical scrolling by default (mobile-first) */
         }
 
         @keyframes gradientAnimation {
@@ -131,19 +134,28 @@
             flex-wrap: wrap;
             opacity: 1;
             transition: none;
+            padding: 20px; /* Apply padding to the main layout content */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+            min-height: 100vh; /* Ensure it takes at least full viewport height */
         }
 
+        /* Default for mobile and smaller tablets: stack vertically */
         .main-layout {
             flex-direction: column;
             align-items: center;
         }
 
+        /* For larger tablets and desktops: display side-by-side */
         @media (min-width: 768px) {
+            body {
+                overflow: hidden; /* Disable scrolling on desktop */
+            }
             .main-layout {
                 flex-direction: row;
                 align-items: stretch;
                 flex-wrap: nowrap;
                 justify-content: center;
+                min-height: auto; /* Reset min-height for desktop as body handles it */
             }
             .profile-card {
                 max-width: 400px;
@@ -358,7 +370,7 @@
                 border-radius: 1.25rem;
             }
             .g2g-profile-button {
-                padding: 0.7rem 1.2rem 0.7rem 0.7rem;
+                padding: 0.7rem 1.2rem;
                 font-size: 1.1rem;
                 width: auto;
             }
@@ -398,7 +410,7 @@
                 margin-bottom: 1.5rem;
             }
             .g2g-profile-button {
-                padding: 0.6rem 1rem 0.6rem 0.6rem;
+                padding: 0.6rem 1rem;
                 font-size: 1rem;
             }
             .profile-pic-in-button {
