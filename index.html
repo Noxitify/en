@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noxitify's Current Time</title>
+    <link rel="icon" href="https://assets.g2g.com/user/avatar/1000882601_1753120361582.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #2d1a3e, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #e2e8f0;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bubble-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bubble-element {
+            position: absolute;
+            background-image: url('https://www.freepnglogos.com/uploads/bubbles/transparent-bubble-clip-art-creation-creatures-4.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 50%;
+            opacity: 0;
+            animation: bubbleFloat infinite ease-in-out;
+            bottom: -20vh;
+        }
+
+        .bubble-element:nth-child(1) {
+            width: 60px; height: 60px; left: 10%;
+            animation-duration: 20s; animation-delay: -5s;
+            --bubble-x-drift: 50px;
+        }
+        .bubble-element:nth-child(2) {
+            width: 80px; height: 80px; left: 30%;
+            animation-duration: 25s; animation-delay: -10s;
+            --bubble-x-drift: -30px;
+        }
+        .bubble-element:nth-child(3) {
+            width: 50px; height: 50px; left: 50%;
+            animation-duration: 22s; animation-delay: -2s;
+            --bubble-x-drift: 40px;
+        }
+        .bubble-element:nth-child(4) {
+            width: 70px; height: 70px; left: 70%;
+            animation-duration: 28s; animation-delay: -15s;
+            --bubble-x-drift: -60px;
+        }
+        .bubble-element:nth-child(5) {
+            width: 90px; height: 90px; left: 85%;
+            animation-duration: 23s; animation-delay: -7s;
+            --bubble-x-drift: 20px;
+        }
+        .bubble-element:nth-child(6) {
+            width: 40px; height: 40px; left: 20%;
+            animation-duration: 19s; animation-delay: -12s;
+            --bubble-x-drift: -40px;
+        }
+        .bubble-element:nth-child(7) {
+            width: 75px; height: 75px; left: 5%;
+            animation-duration: 24s; animation-delay: -9s;
+            --bubble-x-drift: 70px;
+        }
+        .bubble-element:nth-child(8) {
+            width: 65px; height: 65px; left: 90%;
+            animation-duration: 21s; animation-delay: -4s;
+            --bubble-x-drift: -20px;
+        }
+        .bubble-element:nth-child(9) {
+            width: 55px; height: 55px; left: 40%;
+            animation-duration: 26s; animation-delay: -18s;
+            --bubble-x-drift: 30px;
+        }
+        .bubble-element:nth-child(10) {
+            width: 85px; height: 85px; left: 60%;
+            animation-duration: 27s; animation-delay: -11s;
+            --bubble-x-drift: -50px;
+        }
+        .bubble-element:nth-child(11) {
+            width: 48px; height: 48px; left: 25%;
+            animation-duration: 20s; animation-delay: -6s;
+            --bubble-x-drift: 60px;
+        }
+        .bubble-element:nth-child(12) {
+            width: 72px; height: 72px; left: 75%;
+            animation-duration: 22s; animation-delay: -13s;
+            --bubble-x-drift: -70px;
+        }
+
+        @keyframes bubbleFloat {
+            0% { transform: translateY(0) translateX(0); opacity: 0.2; }
+            20% { opacity: 0.25; }
+            40% { transform: translateY(-40vh) translateX(var(--bubble-x-drift, 0)); opacity: 0.3; }
+            60% { transform: translateY(-80vh) translateX(calc(var(--bubble-x-drift, 0) * -1)); opacity: 0.25; }
+            80% { transform: translateY(-120vh) translateX(var(--bubble-x-drift, 0)); opacity: 0.1; }
+            100% { transform: translateY(-140vh) translateX(0); opacity: 0; }
+        }
+
+        #loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-top: 8px solid #d8a4ff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            max-width: 1200px;
+            width: 100%;
+            flex-wrap: wrap;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        /* Default for mobile and smaller tablets: stack vertically */
+        .main-layout {
+            flex-direction: column;
+            align-items: center; /* Center items when stacked */
+        }
+
+        /* For larger tablets and desktops: display side-by-side */
+        @media (min-width: 768px) {
+            .main-layout {
+                flex-direction: row;
+                align-items: stretch; /* Make items stretch to equal height */
+                flex-wrap: nowrap;
+                justify-content: center;
+            }
+            .profile-card {
+                max-width: 400px; /* Keep max-width for profile card */
+                flex-grow: 1; /* Allow it to grow */
+            }
+            .container {
+                max-width: 550px; /* Keep max-width for clock */
+                flex-grow: 1; /* Allow it to grow */
+            }
+        }
+
+        .container {
+            background-color: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(224, 176, 255, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(224, 176, 255, 0.3);
+            padding: 3.5rem;
+            border-radius: 1.75rem;
+            text-align: center;
+            width: 100%; /* Ensure it takes full width within its flex context */
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .profile-card {
+            background-color: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(224, 176, 255, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(224, 176, 255, 0.3);
+            padding: 2.5rem;
+            border-radius: 1.75rem;
+            text-align: center;
+            width: 100%; /* Ensure it takes full width within its flex context */
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-card-pfp {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #d8a4ff;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(224, 176, 255, 0.8), 0 0 30px rgba(224, 176, 255, 0.5);
+        }
+
+        .profile-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #d8a4ff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(224, 176, 255, 0.5);
+        }
+
+        .profile-card p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #c0c7d1;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .profile-card .status-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-card .contact-text {
+            font-size: 1rem;
+            color: #c0c7d1;
+            margin-top: 1rem;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .title-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem; /* Increased title text size */
+            font-weight: 700;
+            color: #d8a4ff;
+            text-shadow: 0 0 20px rgba(224, 176, 255, 0.8), 0 0 35px rgba(224, 176, 255, 0.5);
+            letter-spacing: 0.05em;
+        }
+
+        .time-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 6.5rem; /* Increased timer font size */
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin-bottom: 4.5rem; /* Increased margin for more height */
+            color: #f8fafc;
+            text-shadow: 0 0 30px rgba(248, 250, 252, 0.9), 0 0 50px rgba(248, 250, 252, 0.6);
+            transition: color 0.5s ease-in-out;
+        }
+
+        .g2g-profile-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: #3f444c;
+            color: #ffffff;
+            padding: 0.8rem 1.5rem 0.8rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            margin-top: 2.5rem;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .g2g-profile-button:hover {
+            background-color: #4a515b;
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 0 25px rgba(224, 176, 255, 0.8), 0 0 40px rgba(224, 176, 255, 0.6);
+        }
+
+        .g2g-profile-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-pic-in-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #d8a4ff;
+            object-fit: cover;
+            margin-right: 1rem;
+            box-shadow: 0 0 10px rgba(224, 176, 255, 0.7);
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .container, .profile-card {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .container, .profile-card {
+                max-width: 90%;
+            }
+            .title-text {
+                font-size: 3.5rem; /* Adjusted title for smaller screens */
+            }
+            .time-display {
+                font-size: 5rem; /* Adjusted time for smaller screens */
+            }
+            .g2g-profile-button {
+                padding: 0.8rem 1.5rem 0.8rem 0.8rem;
+                font-size: 1.35rem;
+            }
+            .profile-pic-in-button {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title-section {
+                flex-direction: column;
+                margin-bottom: 1rem;
+            }
+            .title-text {
+                font-size: 2.8rem; /* Even smaller title on mobile */
+            }
+            .time-display {
+                font-size: 3.8rem; /* Even smaller timer on mobile */
+                margin-bottom: 2rem;
+            }
+            .container, .profile-card {
+                padding: 2rem;
+                border-radius: 1.25rem;
+            }
+            .g2g-profile-button {
+                padding: 0.7rem 1.2rem 0.7rem 0.7rem;
+                font-size: 1.1rem;
+                width: auto;
+            }
+            .profile-pic-in-button {
+                width: 40px;
+                height: 40px;
+                margin-right: 0.7rem;
+            }
+            .profile-card-pfp {
+                width: 100px;
+                height: 100px;
+            }
+            .profile-card h2 {
+                font-size: 1.7rem;
+            }
+            .profile-card p, .profile-card .status-text, .profile-card .contact-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="bubble-bg">
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+        <div class="bubble-element"></div>
+    </div>
+
+    <div class="main-layout">
+        <div class="profile-card">
+            <img src="https://assets.g2g.com/user/avatar/1000882601_1753120361582.png" alt="Noxitify Profile Picture" class="profile-card-pfp">
+            <h2>Hey! I’m Noxitify</h2>
+            <p>Your go-to source for in-game gold, gear, and goodies 😊</p>
+            <p class="status-text">Usually Online all day at summer days for fast delivery!</p>
+            <p class="contact-text">Got questions? Shoot me a message on G2G!</p>
+        </div>
+        <div class="container">
+            <div class="title-section">
+                <h1 class="title-text">Noxitify's Current Time</h1>
+            </div>
+            <div id="time" class="time-display">--:--:--</div>
+
+            <a href="https://www.g2g.com/Noxitify" target="_blank" rel="noopener noreferrer" class="g2g-profile-button">
+                <img src="https://play-lh.googleusercontent.com/TqKUeaWC6LCqSeJdyNrfUej61Zz2juzkD53xDxauthPaZ69USaXq-oFYIEcckAKJm3c" alt="Noxitify's G2G Profile Picture" class="profile-pic-in-button">
+                MY G2G PROFILE
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const timeDisplay = document.getElementById('time');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const mainLayout = document.querySelector('.main-layout');
+
+        function updateTime() {
+            try {
+                const now = new Date();
+                const options = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZone: 'Europe/Istanbul'
+                };
+                const turkeyTime = now.toLocaleTimeString('en-US', options);
+                timeDisplay.textContent = turkeyTime;
+            } catch (error) {
+                console.error("Error updating time:", error);
+                timeDisplay.textContent = "Error";
+            }
+        }
+
+        window.onload = function() {
+            loadingSpinner.style.opacity = '0';
+            setTimeout(() => {
+                loadingSpinner.style.display = 'none';
+                mainLayout.style.opacity = '1';
+            }, 500);
+            updateTime();
+            setInterval(updateTime, 1000);
+        };
+    </script>
+</body>
+</html>
