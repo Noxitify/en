@@ -122,34 +122,6 @@
             100% { transform: translateY(-140vh) translateX(0); opacity: 0; }
         }
 
-        #loading-spinner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #1a1a2e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-
-        .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.2);
-            border-top: 8px solid #d8a4ff;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .main-layout {
             display: flex;
             gap: 40px;
@@ -157,31 +129,29 @@
             max-width: 1200px;
             width: 100%;
             flex-wrap: wrap;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
+            opacity: 1; /* Always visible from start */
+            transition: none; /* No transition on load */
         }
 
-        /* Default for mobile and smaller tablets: stack vertically */
         .main-layout {
             flex-direction: column;
-            align-items: center; /* Center items when stacked */
+            align-items: center;
         }
 
-        /* For larger tablets and desktops: display side-by-side */
         @media (min-width: 768px) {
             .main-layout {
                 flex-direction: row;
-                align-items: stretch; /* Make items stretch to equal height */
+                align-items: stretch;
                 flex-wrap: nowrap;
                 justify-content: center;
             }
             .profile-card {
-                max-width: 400px; /* Keep max-width for profile card */
-                flex-grow: 1; /* Allow it to grow */
+                max-width: 400px;
+                flex-grow: 1;
             }
             .container {
-                max-width: 550px; /* Keep max-width for clock */
-                flex-grow: 1; /* Allow it to grow */
+                max-width: 550px;
+                flex-grow: 1;
             }
         }
 
@@ -193,7 +163,7 @@
             padding: 3.5rem;
             border-radius: 1.75rem;
             text-align: center;
-            width: 100%; /* Ensure it takes full width within its flex context */
+            width: 100%;
             animation: fadeIn 1s ease-out;
             position: relative;
             z-index: 1;
@@ -211,7 +181,7 @@
             padding: 2.5rem;
             border-radius: 1.75rem;
             text-align: center;
-            width: 100%; /* Ensure it takes full width within its flex context */
+            width: 100%;
             animation: fadeIn 1s ease-out;
             position: relative;
             z-index: 1;
@@ -277,7 +247,7 @@
 
         .title-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem; /* Increased title text size */
+            font-size: 4.5rem;
             font-weight: 700;
             color: #d8a4ff;
             text-shadow: 0 0 20px rgba(224, 176, 255, 0.8), 0 0 35px rgba(224, 176, 255, 0.5);
@@ -286,10 +256,10 @@
 
         .time-display {
             font-family: 'Orbitron', sans-serif;
-            font-size: 6.5rem; /* Increased timer font size */
+            font-size: 6.5rem;
             font-weight: 700;
             letter-spacing: 0.12em;
-            margin-bottom: 4.5rem; /* Increased margin for more height */
+            margin-bottom: 4.5rem;
             color: #f8fafc;
             text-shadow: 0 0 30px rgba(248, 250, 252, 0.9), 0 0 50px rgba(248, 250, 252, 0.6);
             transition: color 0.5s ease-in-out;
@@ -356,10 +326,10 @@
                 max-width: 90%;
             }
             .title-text {
-                font-size: 3.5rem; /* Adjusted title for smaller screens */
+                font-size: 3.5rem;
             }
             .time-display {
-                font-size: 5rem; /* Adjusted time for smaller screens */
+                font-size: 5rem;
             }
             .g2g-profile-button {
                 padding: 0.8rem 1.5rem 0.8rem 0.8rem;
@@ -377,10 +347,10 @@
                 margin-bottom: 1rem;
             }
             .title-text {
-                font-size: 2.8rem; /* Even smaller title on mobile */
+                font-size: 2.8rem;
             }
             .time-display {
-                font-size: 3.8rem; /* Even smaller timer on mobile */
+                font-size: 3.8rem;
                 margin-bottom: 2rem;
             }
             .container, .profile-card {
@@ -411,10 +381,6 @@
     </style>
 </head>
 <body>
-    <div id="loading-spinner">
-        <div class="spinner"></div>
-    </div>
-
     <div class="bubble-bg">
         <div class="bubble-element"></div>
         <div class="bubble-element"></div>
@@ -453,7 +419,6 @@
 
     <script>
         const timeDisplay = document.getElementById('time');
-        const loadingSpinner = document.getElementById('loading-spinner');
         const mainLayout = document.querySelector('.main-layout');
 
         function updateTime() {
@@ -474,15 +439,10 @@
             }
         }
 
-        window.onload = function() {
-            loadingSpinner.style.opacity = '0';
-            setTimeout(() => {
-                loadingSpinner.style.display = 'none';
-                mainLayout.style.opacity = '1';
-            }, 500);
-            updateTime();
-            setInterval(updateTime, 1000);
-        };
+        // Initialize time immediately when script runs
+        updateTime();
+        // Set interval to update time every second
+        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
