@@ -129,8 +129,8 @@
             max-width: 1200px;
             width: 100%;
             flex-wrap: wrap;
-            opacity: 1; /* Always visible from start */
-            transition: none; /* No transition on load */
+            opacity: 1;
+            transition: none;
         }
 
         .main-layout {
@@ -378,6 +378,45 @@
                 font-size: 0.9rem;
             }
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .main-layout {
+                gap: 20px;
+            }
+            .container, .profile-card {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            .title-text {
+                font-size: 2.2rem;
+            }
+            .time-display {
+                font-size: 3.2rem;
+                margin-bottom: 1.5rem;
+            }
+            .g2g-profile-button {
+                padding: 0.6rem 1rem 0.6rem 0.6rem;
+                font-size: 1rem;
+            }
+            .profile-pic-in-button {
+                width: 35px;
+                height: 35px;
+                margin-right: 0.6rem;
+            }
+            .profile-card-pfp {
+                width: 80px;
+                height: 80px;
+            }
+            .profile-card h2 {
+                font-size: 1.5rem;
+            }
+            .profile-card p, .profile-card .status-text, .profile-card .contact-text {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -439,9 +478,7 @@
             }
         }
 
-        // Initialize time immediately when script runs
         updateTime();
-        // Set interval to update time every second
         setInterval(updateTime, 1000);
     </script>
 </body>
