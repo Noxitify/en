@@ -24,7 +24,7 @@
             color: #e2e8f0;
             position: relative;
             overflow-x: hidden;
-            overflow-y: auto; /* Allow vertical scrolling by default (mobile-first) */
+            overflow-y: auto;
         }
 
         @keyframes gradientAnimation {
@@ -134,28 +134,26 @@
             flex-wrap: wrap;
             opacity: 1;
             transition: none;
-            padding: 20px; /* Apply padding to the main layout content */
-            box-sizing: border-box; /* Include padding in element's total width and height */
-            min-height: 100vh; /* Ensure it takes at least full viewport height */
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
         }
 
-        /* Default for mobile and smaller tablets: stack vertically */
         .main-layout {
             flex-direction: column;
             align-items: center;
         }
 
-        /* For larger tablets and desktops: display side-by-side */
         @media (min-width: 768px) {
             body {
-                overflow: hidden; /* Disable scrolling on desktop */
+                overflow: hidden;
             }
             .main-layout {
                 flex-direction: row;
                 align-items: stretch;
                 flex-wrap: nowrap;
                 justify-content: center;
-                min-height: auto; /* Reset min-height for desktop as body handles it */
+                min-height: auto;
             }
             .profile-card {
                 max-width: 400px;
