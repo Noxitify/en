@@ -9,10 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <style>
         html {
-            height: 100%;
+            height: 100%; /* Ensure html takes full height */
         }
         body {
-            min-height: 100%;
+            min-height: 100vh; /* Ensure body covers at least full viewport height */
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #2d1a3e, #1a1a2e);
             background-size: 400% 400%;
@@ -24,7 +24,7 @@
             color: #e2e8f0;
             position: relative;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: auto; /* Allow vertical scrolling by default (mobile-first) */
             padding: 20px;
             box-sizing: border-box;
         }
@@ -38,7 +38,7 @@
         .bubble-bg {
             position: absolute;
             width: 100%;
-            height: 100%;
+            height: 100%; /* Will now correctly stretch with body */
             top: 0;
             left: 0;
             overflow: hidden;
@@ -137,7 +137,7 @@
             opacity: 1;
             transition: none;
             box-sizing: border-box;
-            padding: 0; /* Handled by body padding */
+            padding: 0; /* Padding is now on body */
             min-height: auto; /* Allow content to dictate height on mobile */
         }
 
@@ -148,11 +148,11 @@
 
         @media (min-width: 768px) {
             body {
-                overflow: hidden;
+                overflow: hidden; /* Disable scrolling on desktop */
             }
             .main-layout {
                 flex-direction: row;
-                align-items: stretch;
+                align-items: stretch; /* Make items stretch to equal height */
                 flex-wrap: nowrap;
                 justify-content: center;
                 min-height: auto;
